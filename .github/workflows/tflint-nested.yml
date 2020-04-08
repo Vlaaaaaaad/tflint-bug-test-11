@@ -28,8 +28,8 @@ jobs:
           terraform init
 
       - name: tflint
-        # uses: reviewdog/action-tflint@master
-        uses: yukin01/action-tflint@develop
+        uses: reviewdog/action-tflint@Vlaaaaaaad-patch-1
+        # uses: yukin01/action-tflint@develop
         with:
           github_token: ${{ secrets.github_token }}
           working_directory: "nested"
