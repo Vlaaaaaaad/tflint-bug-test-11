@@ -1,0 +1,34 @@
+name: reviewdog
+on: pull_request
+
+jobs:
+  Normal:
+    name: tflint-normal
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clone repo
+        uses: actions/checkout@master
+
+      # Install latest Terraform manually as
+      #  Docker-based GitHub Actions are
+      #  slow due to lack of caching
+      # Note: Terraform is not neede for tflint
+      - name: Install Terraform
+        run: |
+          curl -LO https://raw.github.com/robertpeteuil/terraform-installer/master/terraform-install.sh
+          chmod +x terraform-install.sh
+          ./terraform-install.sh -a
+
+      # Run init to get module code to be able to use `--deep`
+      - name: Terraform init
+        run: |
+          terraform init
+
+      - name: tflint
+        uses: reviewdog/action-tflint@master
+        # uses: yukin01/action-tflint@develop
+        with:
+          github_token: ${{ secrets.github_token }}
+          # working_directory: "folder" # Change working directory
+          reporter: github-pr-review
